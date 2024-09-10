@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Testing">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{f2224322-5958-4b4d-ba06-a1da67d9f219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Matrix">
+      <UniqueIdentifier>{0b5e900b-1218-4c9b-a606-8114352a3a33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Randomizer">
+      <UniqueIdentifier>{3872eb4c-a4e3-472f-b06b-64fb9ea29897}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MatrixTask.cpp">
+      <Filter>Testing</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Classes\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Randomizer.cpp">
+      <Filter>Classes\Randomizer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Matrix.h">
+      <Filter>Classes\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Randomizer.h">
+      <Filter>Classes\Randomizer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

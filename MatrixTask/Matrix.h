@@ -7,7 +7,7 @@ class Matrix
 {
 private:
 	std::vector<std::vector<int>> vector;
-	int size;
+	int _size;
 
 public:
 	// Default constructors
@@ -17,15 +17,15 @@ public:
 	Matrix(const Matrix& src);
 
 
-	// Changes Matrix's size. Allocates memory with default vaule 0.
-	// Throws exceprion.
+	// Changes Matrix's size. Allocates memory with default value 0.
+	// Throws exception.
 	void SetSize(int _size);
 
 	// Get actual Matrix's size.
 	int GetSize() const;
 
 
-	// Fills Matrix with random numbers from the left vaule to the right.
+	// Fills Matrix with random numbers from the left value to the right.
 	void Randomize(int leftBoard, int rightBoard);
 
 
@@ -68,14 +68,14 @@ public:
 
 	std::vector<int>& operator[](int i) {
 		if (i < 0) throw std::exception("Matrix.operator[]: negative index.");
-		if (i > size - 1) throw std::exception("Matrix.operator[]: out of range.");
+		if (i > _size - 1) throw std::exception("Matrix.operator[]: out of range.");
 
 		return vector[i];
 	}
 
 	const std::vector<int>& operator[](int i) const {
 		if (i < 0) throw std::exception("Matrix.operator[]: negative index.");
-		if (i > size - 1) throw std::exception("Matrix.operator[]: out of range.");
+		if (i > _size - 1) throw std::exception("Matrix.operator[]: out of range.");
 
 		return vector[i];
 	}

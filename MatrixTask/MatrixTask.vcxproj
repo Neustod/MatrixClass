@@ -148,12 +148,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="MatrixTask.cpp" />
+    <ClCompile Include="testing.cpp" />
     <ClCompile Include="Randomizer.cpp" />
+    <ClCompile Include="RNSCrypter.cpp" />
+    <ClCompile Include="RNSVector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IRNSCrypter.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Randomizer.h" />
+    <ClInclude Include="RNSCrypter.h" />
+    <ClInclude Include="RNSVector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

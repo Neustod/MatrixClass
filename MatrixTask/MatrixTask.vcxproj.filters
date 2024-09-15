@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Testing">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -18,16 +14,31 @@
     <Filter Include="Classes\Randomizer">
       <UniqueIdentifier>{3872eb4c-a4e3-472f-b06b-64fb9ea29897}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\RNS">
+      <UniqueIdentifier>{eb0906d1-ed1f-41ac-a20b-0b32dba09481}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\RNS\RNSCrypter">
+      <UniqueIdentifier>{b06080c9-513d-4857-ba69-fd7a2d4e74d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\RNS\RNSVector">
+      <UniqueIdentifier>{6164692f-19be-4ce7-bc84-82b9a02981d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MatrixTask.cpp">
-      <Filter>Testing</Filter>
-    </ClCompile>
     <ClCompile Include="Matrix.cpp">
       <Filter>Classes\Matrix</Filter>
     </ClCompile>
     <ClCompile Include="Randomizer.cpp">
       <Filter>Classes\Randomizer</Filter>
+    </ClCompile>
+    <ClCompile Include="RNSVector.cpp">
+      <Filter>Classes\RNS\RNSVector</Filter>
+    </ClCompile>
+    <ClCompile Include="RNSCrypter.cpp">
+      <Filter>Classes\RNS\RNSCrypter</Filter>
+    </ClCompile>
+    <ClCompile Include="testing.cpp">
+      <Filter>Testing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +47,15 @@
     </ClInclude>
     <ClInclude Include="Randomizer.h">
       <Filter>Classes\Randomizer</Filter>
+    </ClInclude>
+    <ClInclude Include="RNSVector.h">
+      <Filter>Classes\RNS\RNSVector</Filter>
+    </ClInclude>
+    <ClInclude Include="RNSCrypter.h">
+      <Filter>Classes\RNS\RNSCrypter</Filter>
+    </ClInclude>
+    <ClInclude Include="IRNSCrypter.h">
+      <Filter>Classes\RNS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

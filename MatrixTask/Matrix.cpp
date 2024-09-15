@@ -17,7 +17,7 @@ Matrix::Matrix(int _size)
 	}
 }
 
-Matrix::Matrix(const Matrix& src) : size(src.size), vector(src.vector) {}
+Matrix::Matrix(const Matrix& src) : _size(src._size), vector(src.vector) {}
 
 
 // Getters and setters
@@ -26,21 +26,21 @@ void Matrix::SetSize(int _size)
 {
 	if (_size < 0) throw std::exception("Matrix.SetSize: negative matrix size.");
 
-	size = _size;
+	_size = _size;
 
-	vector.resize(size);
-	for (int i = 0; i < size; i++) vector[i].resize(size, 0);
+	vector.resize(_size);
+	for (int i = 0; i < _size; i++) vector[i].resize(_size, 0);
 }
 
-int Matrix::GetSize() const { return size; }
+int Matrix::GetSize() const { return _size; }
 
 
 // Randomizer's wrapper function
 
 void Matrix::Randomize(int leftBoard, int rightBoard)
 {
-	for (size_t row = 0; row < size; row++)
-		for (size_t col = 0; col < size; col++)
+	for (size_t row = 0; row < _size; row++)
+		for (size_t col = 0; col < _size; col++)
 			vector[row][col] = Randomizer::Instance().RandInt(leftBoard, rightBoard);
 }
 
@@ -49,11 +49,11 @@ void Matrix::Randomize(int leftBoard, int rightBoard)
 
 void Matrix::Add(const Matrix& right)
 {
-	if (size != right.GetSize()) throw std::exception("MatrixCalculator.Add: different matrix sizes.");
+	if (_size != right.GetSize()) throw std::exception("MatrixCalculator.Add: different matrix sizes.");
 
-	for (int row = 0; row < size; row++)
+	for (int row = 0; row < _size; row++)
 	{
-		for (int col = 0; col < size; col++)
+		for (int col = 0; col < _size; col++)
 		{
 			vector[row][col] += right[row][col];
 		}
@@ -61,11 +61,11 @@ void Matrix::Add(const Matrix& right)
 }
 
 void Matrix::Sub(const Matrix& right) {
-	if (size != right.GetSize()) throw std::exception("MatrixCalculator.Add: different matrix sizes.");
+	if (_size != right.GetSize()) throw std::exception("MatrixCalculator.Add: different matrix sizes.");
 
-	for (int row = 0; row < size; row++)
+	for (int row = 0; row < _size; row++)
 	{
-		for (int col = 0; col < size; col++)
+		for (int col = 0; col < _size; col++)
 		{
 			vector[row][col] -= right[row][col];
 		}
@@ -73,25 +73,25 @@ void Matrix::Sub(const Matrix& right) {
 }
 
 void Matrix::Mul(const Matrix& right) {
-	if (size != right.GetSize()) throw std::exception("MatrixCalculator.Mul: different matrix sizes.");
+	if (_size != right.GetSize()) throw std::exception("MatrixCalculator.Mul: different matrix sizes.");
 
 	int rowSum = 0;
-	int* tmpRow = new int[size];
+	int* tmpRow = new int[_size];
 
-	for (int row = 0; row < size; row++)
+	for (int row = 0; row < _size; row++)
 	{
-		for (int col = 0; col < size; col++)
+		for (int col = 0; col < _size; col++)
 		{
 			rowSum = 0;
 
-			for (int inner = 0; inner < size; inner++)
+			for (int inner = 0; inner < _size; inner++)
 			{
 				rowSum += vector[row][inner] * right[inner][col];
 			}
 
 			tmpRow[col] = rowSum;
 		}
-		for (int col = 0; col < size; col++) vector[row][col] = tmpRow[col];
+		for (int col = 0; col < _size; col++) vector[row][col] = tmpRow[col];
 	}
 
 	delete[] tmpRow;
@@ -132,16 +132,16 @@ Matrix& Matrix::Mul(const Matrix& left, const Matrix& right)
 	if (left.GetSize() != right.GetSize()) throw std::exception("MatrixCalculator.Mul: different matrix sizes.");
 
 	Matrix* result = new Matrix{ left };
-	int size = result->GetSize();
+	int _size = result->GetSize();
 	int rowSum = 0;
 
-	for (int row = 0; row < size; row++)
+	for (int row = 0; row < _size; row++)
 	{
-		for (int col = 0; col < size; col++)
+		for (int col = 0; col < _size; col++)
 		{
 			rowSum = 0;
 
-			for (int inner = 0; inner < size; inner++)
+			for (int inner = 0; inner < _size; inner++)
 			{
 				rowSum += left[row][inner] * right[inner][col];
 			}
@@ -158,16 +158,16 @@ Matrix& Matrix::Mul(const Matrix& left, const Matrix& right)
 
 void Matrix::Input()
 {
-	for (size_t row = 0; row < size; row++)
-		for (size_t col = 0; col < size; col++)
+	for (size_t row = 0; row < _size; row++)
+		for (size_t col = 0; col < _size; col++)
 			std::cin >> vector[row][col];
 }
 
 void Matrix::Output() const
 {
-	for (size_t row = 0; row < size; row++)
+	for (size_t row = 0; row < _size; row++)
 	{
-		for (size_t col = 0; col < size; col++)
+		for (size_t col = 0; col < _size; col++)
 			std::cout << vector[row][col] << ' ';
 
 		std::cout << std::endl;
@@ -176,16 +176,16 @@ void Matrix::Output() const
 
 void Matrix::Input(std::ifstream& fin)
 {
-	for (size_t row = 0; row < size; row++)
-		for (size_t col = 0; col < size; col++)
+	for (size_t row = 0; row < _size; row++)
+		for (size_t col = 0; col < _size; col++)
 			fin >> vector[row][col];
 }
 
 void Matrix::Output(std::ofstream& fout) const
 {
-	for (size_t row = 0; row < size; row++)
+	for (size_t row = 0; row < _size; row++)
 	{
-		for (size_t col = 0; col < size; col++)
+		for (size_t col = 0; col < _size; col++)
 			fout << vector[row][col] << ' ';
 
 		fout << std::endl;

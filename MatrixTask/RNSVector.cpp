@@ -1,5 +1,6 @@
 #include "RNSVector.h"
 #include <xmemory>
+#include <iostream>
 
 
 // Constructors
@@ -20,6 +21,12 @@ RNSVector::RNSVector(const RNSVector& src) : _size(src._size)
 	memcpy(_digits, src._digits, _size * sizeof(uint32_t));
 	memcpy(_primes, src._primes, _size * sizeof(uint32_t));
 }
+
+
+
+size_t RNSVector::Size() const { return _size; }
+
+const uint32_t* RNSVector::Primes() const { return _primes; }
 
 
 // Encoding and Decoding
@@ -65,6 +72,27 @@ RNSVector& RNSVector::Mul(const RNSVector& leftRnsNum, const RNSVector& rightRns
 	result->Mul(rightRnsNum);
 
 	return *result;
+}
+
+
+void RNSVector::Input()
+{
+	for (int i = 0; i < _size; i++) scanf_s("%u", &_digits[i]);
+}
+
+void RNSVector::Output() const
+{
+	for (int i = 0; i < _size; i++) printf_s("%u ", _digits[i]);
+}
+
+void RNSVector::Input(std::ifstream& fin)
+{
+	for (int i = 0; i < _size; i++) fin >> _digits[i];
+}
+
+void RNSVector::Output(std::ofstream& fout) const
+{
+	for (int i = 0; i < _size; i++) fout << _digits << " ";
 }
 
 

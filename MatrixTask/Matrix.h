@@ -1,82 +1,90 @@
 #pragma once
 #include <vector>
 #include <fstream>
+#include <iostream>
 
 
+template<class T>
 class Matrix
 {
 private:
-	std::vector<std::vector<int>> vector;
+	std::vector<std::vector<T>> _vector;
 	int _size;
 
 public:
 	// Default constructors
-	Matrix(int _size = 0);
+	Matrix() : _size(0), _vector(std::vector<std::vector<T>>(0)) {}
+
+	Matrix(int size, const T& defaultValue)
+	{
+		try {
+			SetSize(size, defaultValue);
+		}
+		catch (std::exception e) {
+			std::cout << "RuntimeError: Matrix." << e.what() << std::endl;
+		}
+	}
 
 	// Copying constructor
-	Matrix(const Matrix& src);
+	Matrix(const Matrix& src) : _size(src._size), _vector(src._vector) {}
 
 
 	// Changes Matrix's size. Allocates memory with default value 0.
 	// Throws exception.
-	void SetSize(int _size);
+	void SetSize(int size, const T& defaultValue)
+	{
+		if (size < 0) throw std::exception("Matrix.SetSize: negative matrix size.");
 
-	// Get actual Matrix's size.
-	int GetSize() const;
+		_size = size;
 
-
-	// Fills Matrix with random numbers from the left value to the right.
-	void Randomize(int leftBoard, int rightBoard);
-
-
-	// Adding Matrixes.
-	// Result will be stored in the current Matrix object.
-	void Add(const Matrix& right);
-
-	// Subliming Matrixes.
-	// Result will be stored in the current Matrix object.
-	void Sub(const Matrix& right);
-
-	// Multiplying Matrixes.
-	// Result will be stored in the current Matrix object.
-	void Mul(const Matrix& right);
-
-	// Adding Matrixes.
-	// Returns new Matrix object.
-	static Matrix& Add(const Matrix& left, const Matrix& right);
-
-	// Subliming Matrixes.
-	// Returns new Matrix object.
-	static Matrix& Sub(const Matrix& left, const Matrix& right);
-
-	// Multiplying Matrixes.
-	// Returns new Matrix object.
-	static Matrix& Mul(const Matrix& left, const Matrix& right);
-
-	// Console stream input.
-	void Input();
-
-	// Console stream output.
-	void Output() const;
-
-	// File stream input.
-	void Input(std::ifstream& fin);
-
-	// File stream output.
-	void Output(std::ofstream& fout) const;
-
-
-	std::vector<int>& operator[](int i) {
-		if (i < 0) throw std::exception("Matrix.operator[]: negative index.");
-		if (i > _size - 1) throw std::exception("Matrix.operator[]: out of range.");
-
-		return vector[i];
+		_vector.resize(_size);
+		for (int i = 0; i < _size; i++) _vector[i].resize(_size, defaultValue);
 	}
 
-	const std::vector<int>& operator[](int i) const {
+	// Get actual Matrix's size.
+	int GetSize() const { return _size; }
+
+
+	// Adding Matrixes.
+	// Result will be stored in the current Matrix object.
+	virtual void Add(const Matrix& right) = 0;
+
+	// Multiplying Matrixes.
+	// Result will be stored in the current Matrix object.
+	virtual void Mul(const Matrix& right) = 0;
+
+	// Adding Matrixes.
+	// Returns new Matrix object.
+	//virtual Matrix& Add(const Matrix& left, const Matrix& right) = 0;
+
+	// Multiplying Matrixes.
+	// Returns new Matrix object.
+	//virtual Matrix& Mul(const Matrix& left, const Matrix& right) = 0;
+
+	// Console stream input.
+	virtual void Input() = 0;
+
+	// Console stream output.
+	virtual void Output() const = 0;
+
+	// File stream input.
+	virtual void Input(std::ifstream& fin) = 0;
+
+	// File stream output.
+	virtual void Output(std::ofstream& fout) const = 0;
+
+
+	std::vector<T>& operator[](int i) {
 		if (i < 0) throw std::exception("Matrix.operator[]: negative index.");
 		if (i > _size - 1) throw std::exception("Matrix.operator[]: out of range.");
 
-		return vector[i];
+		return _vector[i];
+	}
+
+	const std::vector<T>& operator[](int i) const {
+		if (i < 0) throw std::exception("Matrix.operator[]: negative index.");
+		if (i > _size - 1) throw std::exception("Matrix.operator[]: out of range.");
+
+		return _vector[i];
 	}
 };

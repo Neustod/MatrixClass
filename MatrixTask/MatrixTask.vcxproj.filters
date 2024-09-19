@@ -14,48 +14,75 @@
     <Filter Include="Classes\Randomizer">
       <UniqueIdentifier>{3872eb4c-a4e3-472f-b06b-64fb9ea29897}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\RNS">
-      <UniqueIdentifier>{eb0906d1-ed1f-41ac-a20b-0b32dba09481}</UniqueIdentifier>
+    <Filter Include="Classes\Randomizer\RandCore">
+      <UniqueIdentifier>{e6824785-c2e9-4bf4-b129-b409f7e81d49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\RNS\RNSCrypter">
+    <Filter Include="Classes\Matrix\RNSMatrix">
+      <UniqueIdentifier>{eca4a3bc-cad6-4b03-a984-5ea03a01e8fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Randomizer\RNSRandomizer">
+      <UniqueIdentifier>{feca1f45-a56b-4e76-bf06-da9ad95fdf3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Randomizer\IntRandomizer">
+      <UniqueIdentifier>{908dee1b-d4a3-43c8-b4bc-390b5077789e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Crypter">
+      <UniqueIdentifier>{cf5c89f3-7f0b-4e49-80f1-fbaa2fcb24d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Crypter\RNSCrypter">
       <UniqueIdentifier>{b06080c9-513d-4857-ba69-fd7a2d4e74d8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\RNS\RNSVector">
+    <Filter Include="Classes\RNSVector">
       <UniqueIdentifier>{6164692f-19be-4ce7-bc84-82b9a02981d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>Classes\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="Randomizer.cpp">
-      <Filter>Classes\Randomizer</Filter>
-    </ClCompile>
     <ClCompile Include="RNSVector.cpp">
-      <Filter>Classes\RNS\RNSVector</Filter>
+      <Filter>Classes\RNSVector</Filter>
     </ClCompile>
     <ClCompile Include="RNSCrypter.cpp">
-      <Filter>Classes\RNS\RNSCrypter</Filter>
+      <Filter>Classes\Crypter\RNSCrypter</Filter>
     </ClCompile>
     <ClCompile Include="testing.cpp">
       <Filter>Testing</Filter>
+    </ClCompile>
+    <ClCompile Include="RNSRandomizer.cpp">
+      <Filter>Classes\Randomizer\RNSRandomizer</Filter>
+    </ClCompile>
+    <ClCompile Include="RandSeed.cpp">
+      <Filter>Classes\Randomizer\RandCore</Filter>
+    </ClCompile>
+    <ClCompile Include="RNSMatrix.cpp">
+      <Filter>Classes\Matrix\RNSMatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="IntRandomizer.cpp">
+      <Filter>Classes\Randomizer\IntRandomizer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix.h">
       <Filter>Classes\Matrix</Filter>
     </ClInclude>
-    <ClInclude Include="Randomizer.h">
-      <Filter>Classes\Randomizer</Filter>
-    </ClInclude>
     <ClInclude Include="RNSVector.h">
-      <Filter>Classes\RNS\RNSVector</Filter>
+      <Filter>Classes\RNSVector</Filter>
     </ClInclude>
     <ClInclude Include="RNSCrypter.h">
-      <Filter>Classes\RNS\RNSCrypter</Filter>
+      <Filter>Classes\Crypter\RNSCrypter</Filter>
+    </ClInclude>
+    <ClInclude Include="RNSRandomizer.h">
+      <Filter>Classes\Randomizer\RNSRandomizer</Filter>
+    </ClInclude>
+    <ClInclude Include="RandSeed.h">
+      <Filter>Classes\Randomizer\RandCore</Filter>
+    </ClInclude>
+    <ClInclude Include="RNSMatrix.h">
+      <Filter>Classes\Matrix\RNSMatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="IntRandomizer.h">
+      <Filter>Classes\Randomizer\IntRandomizer</Filter>
     </ClInclude>
     <ClInclude Include="IRNSCrypter.h">
-      <Filter>Classes\RNS</Filter>
+      <Filter>Classes\Crypter</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

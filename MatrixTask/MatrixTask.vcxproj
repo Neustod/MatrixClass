@@ -90,10 +90,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -104,10 +107,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../OpenCL/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,17 +152,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="RandSeed.cpp" />
+    <ClCompile Include="RNSMatrix.cpp" />
+    <ClCompile Include="RNSRandomizer.cpp" />
     <ClCompile Include="testing.cpp" />
-    <ClCompile Include="Randomizer.cpp" />
+    <ClCompile Include="IntRandomizer.cpp" />
     <ClCompile Include="RNSCrypter.cpp" />
     <ClCompile Include="RNSVector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IRNSCrypter.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="Randomizer.h" />
+    <ClInclude Include="RandSeed.h" />
+    <ClInclude Include="IntRandomizer.h" />
     <ClInclude Include="RNSCrypter.h" />
+    <ClInclude Include="RNSMatrix.h" />
+    <ClInclude Include="RNSRandomizer.h" />
     <ClInclude Include="RNSVector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

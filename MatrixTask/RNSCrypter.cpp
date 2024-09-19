@@ -3,7 +3,7 @@
 
 #ifdef _DEBUG
 #include<iostream>
-#define DEBUG(x) x
+#define DEBUG(x)
 #else
 #define DEBUG(x)
 #endif // _DEBUG

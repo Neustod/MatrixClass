@@ -1,5 +1,6 @@
 #pragma once
 #include "IRNSCrypter.h"
+#include <fstream>
 
 
 // The class is used to store RNS numbers and doing arithmetical operatiions.
@@ -22,6 +23,10 @@ public:
 	RNSVector(const RNSVector& src);
 
 
+	size_t Size() const;
+
+	const uint32_t* Primes() const;
+
 	// Returns decoded value by decrypting RNS number in the Crypter.
 	uint32_t Decode(const IRNSCrypter& crypter);
 
@@ -42,6 +47,14 @@ public:
 	// Multiplicating operation for RNS numbers.
 	static RNSVector& Mul(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum);
 
+
+	void Input();
+
+	void Output() const;
+
+	void Input(std::ifstream& fin);
+
+	void Output(std::ofstream& fout) const;
 
 	// Deconstructor
 	~RNSVector();

@@ -13,6 +13,8 @@ void RNSMatrix::Add(const Matrix<RNSVector>& right)
 {
 	int size = this->GetSize();
 
+	if (size == 0) return;
+
 	for (int row = 0; row < size; row++)
 	{
 		for (int col = 0; col < size; col++)
@@ -29,23 +31,20 @@ void RNSMatrix::Mul(const Matrix<RNSVector>& right)
 	if (size == 0) return;
 
 	RNSCrypter crypter{(*this)[0][0].Primes(), (*this)[0][0].Size()};
-	RNSVector rowSum{ crypter };
 
 	std::vector<RNSVector> tmpRow;
-	for (int i = 0; i < (*this)[0][0].Size(); i++) tmpRow.push_back(RNSVector{ crypter });
+	for (int i = 0; i < size; i++) tmpRow.push_back(RNSVector{ crypter });
 
 	for (int row = 0; row < size; row++)
 	{
 		for (int col = 0; col < size; col++)
 		{
-			rowSum.Encode(crypter, 0);
+			tmpRow[col].Encode(crypter, 0);
 
 			for (int inner = 0; inner < size; inner++)
 			{
-				rowSum.Add(RNSVector::Mul((*this)[row][inner], right[inner][col]));
+				tmpRow[col].Add(RNSVector::Mul((*this)[row][inner], right[inner][col]));
 			}
-
-			tmpRow[col] = rowSum;
 		}
 		for (int col = 0; col < size; col++) (*this)[row][col] = tmpRow[col];
 	}
@@ -117,7 +116,8 @@ void RNSMatrix::Output(std::ofstream& fout) const
 		for (int col = 0; col < size; col++)
 		{
 			(*this)[row][col].Output(fout);
-			fout << std::endl;
+			fout << " ";
 		}
+		fout << std::endl;
 	}
 }

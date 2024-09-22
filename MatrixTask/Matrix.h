@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-template<class T>
+template<typename T>
 class Matrix
 {
 private:
@@ -17,17 +17,18 @@ public:
 
 	Matrix(int size, const T& defaultValue)
 	{
-		try {
+		try
+		{
 			SetSize(size, defaultValue);
 		}
-		catch (std::exception e) {
+		catch (std::exception e)
+		{
 			std::cout << "RuntimeError: Matrix." << e.what() << std::endl;
 		}
 	}
 
 	// Copying constructor
-	Matrix(const Matrix& src) : _size(src._size), _vector(src._vector) {}
-
+	Matrix(const Matrix<T>& src) : _size(src._size), _vector(src._vector) {}
 
 	// Changes Matrix's size. Allocates memory with default value 0.
 	// Throws exception.
@@ -47,19 +48,11 @@ public:
 
 	// Adding Matrixes.
 	// Result will be stored in the current Matrix object.
-	virtual void Add(const Matrix& right) = 0;
+	virtual void Add(const Matrix<T>& right) = 0;
 
 	// Multiplying Matrixes.
 	// Result will be stored in the current Matrix object.
-	virtual void Mul(const Matrix& right) = 0;
-
-	// Adding Matrixes.
-	// Returns new Matrix object.
-	//virtual Matrix& Add(const Matrix& left, const Matrix& right) = 0;
-
-	// Multiplying Matrixes.
-	// Returns new Matrix object.
-	//virtual Matrix& Mul(const Matrix& left, const Matrix& right) = 0;
+	virtual void Mul(const Matrix<T>& right) = 0;
 
 	// Console stream input.
 	virtual void Input() = 0;

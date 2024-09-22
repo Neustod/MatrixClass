@@ -35,6 +35,12 @@
     <Filter Include="Classes\RNSVector">
       <UniqueIdentifier>{6164692f-19be-4ce7-bc84-82b9a02981d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Matrix\SimpleMatrix">
+      <UniqueIdentifier>{4b1d325b-b1aa-4ec8-9953-acb8b0f9eb7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Testing\Tests">
+      <UniqueIdentifier>{906491df-a731-4a5a-85a9-8d84f51cfe39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RNSVector.cpp">
@@ -58,11 +64,14 @@
     <ClCompile Include="IntRandomizer.cpp">
       <Filter>Classes\Randomizer\IntRandomizer</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleMatrix.cpp">
+      <Filter>Classes\Matrix\SimpleMatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests.cpp">
+      <Filter>Testing\Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Matrix.h">
-      <Filter>Classes\Matrix</Filter>
-    </ClInclude>
     <ClInclude Include="RNSVector.h">
       <Filter>Classes\RNSVector</Filter>
     </ClInclude>
@@ -83,6 +92,15 @@
     </ClInclude>
     <ClInclude Include="IRNSCrypter.h">
       <Filter>Classes\Crypter</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMatrix.h">
+      <Filter>Classes\Matrix\SimpleMatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Classes\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests.h">
+      <Filter>Testing\Tests</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

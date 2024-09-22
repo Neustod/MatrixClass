@@ -155,10 +155,12 @@
     <ClCompile Include="RandSeed.cpp" />
     <ClCompile Include="RNSMatrix.cpp" />
     <ClCompile Include="RNSRandomizer.cpp" />
+    <ClCompile Include="SimpleMatrix.cpp" />
     <ClCompile Include="testing.cpp" />
     <ClCompile Include="IntRandomizer.cpp" />
     <ClCompile Include="RNSCrypter.cpp" />
     <ClCompile Include="RNSVector.cpp" />
+    <ClCompile Include="Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IRNSCrypter.h" />
@@ -169,6 +171,8 @@
     <ClInclude Include="RNSMatrix.h" />
     <ClInclude Include="RNSRandomizer.h" />
     <ClInclude Include="RNSVector.h" />
+    <ClInclude Include="SimpleMatrix.h" />
+    <ClInclude Include="Tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

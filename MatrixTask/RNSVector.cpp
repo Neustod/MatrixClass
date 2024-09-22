@@ -95,6 +95,17 @@ void RNSVector::Output(std::ofstream& fout) const
 	for (int i = 0; i < _size; i++) fout << _digits << " ";
 }
 
+void RNSVector::operator=(const RNSVector& src)
+{
+	_size = src._size;
+
+	_digits = new uint32_t[_size];
+	_primes = new uint32_t[_size];
+
+	memcpy(_digits, src._digits, _size * sizeof(uint32_t));
+	memcpy(_primes, src._primes, _size * sizeof(uint32_t));
+}
+
 
 // Deconstructor
 

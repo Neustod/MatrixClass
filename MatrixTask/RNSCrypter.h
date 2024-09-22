@@ -44,6 +44,7 @@ public:
 	// Decodes RNS code to uint32 number.
 	uint32_t Decode(const uint32_t* rnsNum) const;
 
+	void operator=(const RNSCrypter& src);
 
 	// Deconstructor
 	~RNSCrypter();

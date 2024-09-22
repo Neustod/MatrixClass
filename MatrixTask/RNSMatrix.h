@@ -1,6 +1,7 @@
 #pragma once
 #include "Matrix.h"
 #include "RNSVector.h"
+#include "RNSCrypter.h"
 
 
 class RNSMatrix : public Matrix<RNSVector>
@@ -12,24 +13,24 @@ public:
 
 	RNSMatrix(const RNSMatrix& src);
 
-	void Add(const Matrix& right);
+	void Add(const Matrix<RNSVector>& right);
 
-	void Mul(const Matrix& right);
+	void Mul(const Matrix<RNSVector>& right);
 
 	static RNSMatrix& Add(const RNSMatrix& left, const RNSMatrix& right);
 
 	static RNSMatrix& Mul(const RNSMatrix& left, const RNSMatrix& right);
 
 	// Console stream input.
-	void Input();
+	void Input() override;
 
 	// Console stream output.
-	void Output() const;
+	void Output() const override;
 
 	// File stream input.
-	void Input(std::ifstream& fin);
+	void Input(std::ifstream& fin) override;
 
 	// File stream output.
-	void Output(std::ofstream& fout) const;
+	void Output(std::ofstream& fout) const override;
 };
 

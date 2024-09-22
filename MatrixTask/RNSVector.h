@@ -56,6 +56,8 @@ public:
 
 	void Output(std::ofstream& fout) const;
 
+	void operator=(const RNSVector& src);
+
 	// Deconstructor
 	~RNSVector();
 };

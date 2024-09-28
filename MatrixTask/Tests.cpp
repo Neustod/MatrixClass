@@ -2,7 +2,7 @@
 #include <fstream>
 
 
-int DecodeTest(const std::string& outputFile, const RNSCrypter& crypter)
+int DecodeTest(const char* outputFile, const RNSCrypter& crypter)
 {
     std::ofstream fout{ outputFile };
     uint32_t encoded, decoded;
@@ -10,7 +10,10 @@ int DecodeTest(const std::string& outputFile, const RNSCrypter& crypter)
 
     int errNumber = 0;
 
-    for (int i = 0; i < crypter.Size(); i++) fout << crypter.Primes()[i] << " ";
+    for (int i = 0; i < crypter.Size(); i++) 
+    {
+        fout << crypter.Primes()[i] << " ";
+    }
     fout << "\n";
 
     for (int i = 0; i < TEST_AMOUNT; i++)
@@ -19,17 +22,20 @@ int DecodeTest(const std::string& outputFile, const RNSCrypter& crypter)
         RNSVector test{ crypter, encoded };
         decoded = test.Decode(crypter);
 
-        fout << i << ":encoded=" << encoded << ":decoded=" << decoded << ":";
+        fout << i << "\n:encoded=" << encoded << "\n:decoded=" << decoded << "\n:RNS= ";
+
+        test.Output(fout);
+
         if (encoded == decoded)
         {
-            fout << "true";
+            fout << "\ntrue";
         }
         else
         {
-            fout << "false";
+            fout << "\nfalse";
             errNumber++;
         }
-        fout << ";\n";
+        fout << ";\n\n";
     }
 
     fout.close();
@@ -38,8 +44,13 @@ int DecodeTest(const std::string& outputFile, const RNSCrypter& crypter)
 }
 
 
-int AddTest(const std::string& outputFile, const RNSCrypter& crypter)
+int ArithmeticTest(
+    const char* outputFile, 
+    const RNSCrypter& crypter, 
+    char cBinOperator)
 {
+    if (cBinOperator != '+' && cBinOperator != '-' && cBinOperator != '*') return -1;
+
     std::ofstream fout{ outputFile };
     IntRandomizer rander;
 
@@ -60,57 +71,66 @@ int AddTest(const std::string& outputFile, const RNSCrypter& crypter)
         SimpleMatrix<uint32_t> a{ matrixSize, 0 }, b{ matrixSize, 0 };
         RNSMatrix rnsA{ matrixSize, RNSVector{crypter} }, rnsB{ matrixSize, RNSVector{crypter} };
 
-        fout << i <<":size="<< matrixSize << ":m1:";
-        for (int row = 0; row < matrixSize; row++) 
+        fout << i << ":\nsize=" << matrixSize << ":\n";
+
+        for (int row = 0; row < matrixSize; row++)
         {
             for (int col = 0; col < matrixSize; col++)
             {
-                a[row][col] = rander.RandInt32(0, RIGHT_BORDER);
-
-                if (col + 1 == matrixSize)
-                    fout << a[row][col];
-                else
-                    fout << a[row][col] << " ";
+                if (cBinOperator != '-') 
+                {
+                    a[row][col] = rander.RandInt32(0, RIGHT_BORDER);
+                    b[row][col] = rander.RandInt32(0, RIGHT_BORDER);
+                }
+                else 
+                {
+                    a[row][col] = rander.RandInt32(RIGHT_BORDER / 2, RIGHT_BORDER);
+                    b[row][col] = rander.RandInt32(0, RIGHT_BORDER / 2);
+                }
 
                 rnsA[row][col].Encode(crypter, a[row][col]);
-            }
-            fout << ":";
-        }
-
-        fout << "m2:";
-        for (int row = 0; row < matrixSize; row++)
-        {
-            for (int col = 0; col < matrixSize; col++)
-            {
-                b[row][col] = rander.RandInt32(0, RIGHT_BORDER);
-
-                if (col + 1 == matrixSize)
-                    fout << b[row][col];
-                else
-                    fout << b[row][col] << " ";
-
                 rnsB[row][col].Encode(crypter, b[row][col]);
             }
-            fout << ":";
         }
 
-        a.Add(b);
-        rnsA.Add(rnsB);
+        fout << "m1:\n";
+        a.Output(fout);
 
-        fout << "m1+m2:";
-        for (int row = 0; row < matrixSize; row++)
+        fout << "m2:\n";
+        b.Output(fout);
+
+        fout << "(rns)m1:\n";
+        rnsA.Output(fout);
+
+        fout << "(rns)m2:\n";
+        rnsB.Output(fout);
+
+        switch (cBinOperator)
         {
-            for (int col = 0; col < matrixSize; col++)
-            {
-                if (col + 1 == matrixSize)
-                    fout << a[row][col];
-                else
-                    fout << a[row][col] << " ";
-            }
-            fout << ":";
+        case '+':
+            a.Add(b);
+            rnsA.Add(rnsB);
+            break;
+        case '-':
+            a.Sub(b);
+            rnsA.Sub(rnsB);
+            break;
+        case '*':
+            a.Mul(b);
+            rnsA.Mul(rnsB);
+            break;
+        default:
+            fout.close();
+            return -1;
         }
 
-        fout << "(rns)m1+m2:";
+        fout << "(rns)m1*m2:\n";
+        rnsA.Output(fout);
+
+        fout << "m1*m2:\n";
+        a.Output(fout);
+
+        fout << "(decoded)m1*m2:\n";
         for (int row = 0; row < matrixSize; row++)
         {
             for (int col = 0; col < matrixSize; col++)
@@ -124,116 +144,10 @@ int AddTest(const std::string& outputFile, const RNSCrypter& crypter)
                 else
                     fout << tmp << " ";
             }
-            fout << ":";
+            fout << ":\n";
         }
 
-        if (bInnerError)
-            fout << "false" << std::endl;
-        else
-            fout << "true" << std::endl;
-
-        errNumber += bInnerError;
-    }
-
-    fout.close();
-
-    return errNumber;
-}
-
-
-int MulTest(const std::string& outputFile, const RNSCrypter& crypter)
-{
-    std::ofstream fout{ outputFile };
-    IntRandomizer rander;
-
-    int errNumber = 0;
-    bool bInnerError = false;
-    int matrixSize = 0;
-    uint32_t tmp = 0;
-
-    for (int i = 0; i < crypter.Size(); i++) fout << crypter.Primes()[i] << " ";
-    fout << "\n";
-
-    for (int i = 0; i < TEST_AMOUNT; i++)
-    {
-        matrixSize = rander.RandInt32(3, 11);
-
-        bInnerError = false;
-
-        SimpleMatrix<uint32_t> a{ matrixSize, 0 }, b{ matrixSize, 0 };
-        RNSMatrix rnsA{ matrixSize, RNSVector{crypter} }, rnsB{ matrixSize, RNSVector{crypter} };
-
-        fout << i << ":size=" << matrixSize << ":m1:";
-        for (int row = 0; row < matrixSize; row++)
-        {
-            for (int col = 0; col < matrixSize; col++)
-            {
-                a[row][col] = rander.RandInt32(0, RIGHT_BORDER);
-
-                if (col + 1 == matrixSize)
-                    fout << a[row][col];
-                else
-                    fout << a[row][col] << " ";
-
-                rnsA[row][col].Encode(crypter, a[row][col]);
-            }
-            fout << ":";
-        }
-
-        fout << "m2:";
-        for (int row = 0; row < matrixSize; row++)
-        {
-            for (int col = 0; col < matrixSize; col++)
-            {
-                b[row][col] = rander.RandInt32(0, RIGHT_BORDER);
-
-                if (col + 1 == matrixSize)
-                    fout << b[row][col];
-                else
-                    fout << b[row][col] << " ";
-
-                rnsB[row][col].Encode(crypter, b[row][col]);
-            }
-            fout << ":";
-        }
-
-        a.Mul(b);
-        rnsA.Mul(rnsB);
-
-        fout << "m1*m2:";
-        for (int row = 0; row < matrixSize; row++)
-        {
-            for (int col = 0; col < matrixSize; col++)
-            {
-                if (col + 1 == matrixSize)
-                    fout << a[row][col];
-                else
-                    fout << a[row][col] << " ";
-            }
-            fout << ":";
-        }
-
-        fout << "(rns)m1*m2:";
-        for (int row = 0; row < matrixSize; row++)
-        {
-            for (int col = 0; col < matrixSize; col++)
-            {
-                tmp = rnsA[row][col].Decode(crypter);
-
-                if (tmp != a[row][col]) bInnerError = true;
-
-                if (col + 1 == matrixSize)
-                    fout << tmp;
-                else
-                    fout << tmp << " ";
-            }
-            fout << ":";
-        }
-
-        if (bInnerError)
-            fout << "false" << std::endl;
-        else
-            fout << "true" << std::endl;
+        fout << (bInnerError ? "false" : "true") << ";\n\n";
 
         errNumber += bInnerError;
     }

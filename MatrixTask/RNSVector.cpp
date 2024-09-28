@@ -22,6 +22,14 @@ RNSVector::RNSVector(const RNSVector& src) : _size(src._size)
 	memcpy(_primes, src._primes, _size * sizeof(uint32_t));
 }
 
+RNSVector::RNSVector(RNSVector&& src) noexcept : _size(src._size)
+{
+	_digits = NULL;
+	_primes = NULL;
+
+	std::swap(_digits, src._digits);
+	std::swap(_primes, src._primes);
+}
 
 
 size_t RNSVector::Size() const { return _size; }
@@ -48,6 +56,16 @@ void RNSVector::Add(const RNSVector& rightRnsNum)
 	}
 }
 
+void RNSVector::Sub(const RNSVector& rightRnsNum)
+{
+	if (_size != rightRnsNum._size) throw std::exception("RNSVector.Add: Different vector sizes.");
+
+	for (int i = 0; i < _size; i++)
+	{
+		_digits[i] = ((uint64_t)_digits[i] + (_primes[i] - rightRnsNum._digits[i])) % _primes[i];
+	}
+}
+
 void RNSVector::Mul(const RNSVector& rightRnsNum)
 {
 	if (_size != rightRnsNum._size) throw std::exception("RNSVector.Add: Different vector sizes.");
@@ -58,6 +76,16 @@ void RNSVector::Mul(const RNSVector& rightRnsNum)
 	}
 }
 
+void RNSVector::Div(const RNSVector& rightRnsNum)
+{
+	// TODO: Div method
+}
+
+void RNSVector::Mod(const RNSVector& rightRnsNum)
+{
+	// TODO: Mod method
+}
+
 RNSVector& RNSVector::Add(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum)
 {
 	RNSVector* result = new RNSVector(leftRnsNum);
@@ -66,10 +94,34 @@ RNSVector& RNSVector::Add(const RNSVector& leftRnsNum, const RNSVector& rightRns
 	return *result;
 }
 
+RNSVector& RNSVector::Sub(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum)
+{
+	RNSVector* result = new RNSVector(leftRnsNum);
+	result->Sub(rightRnsNum);
+
+	return *result;
+}
+
 RNSVector& RNSVector::Mul(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum)
 {
 	RNSVector* result = new RNSVector(leftRnsNum);
 	result->Mul(rightRnsNum);
+
+	return *result;
+}
+
+RNSVector& RNSVector::Div(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum)
+{
+	RNSVector* result = new RNSVector(leftRnsNum);
+	result->Div(rightRnsNum);
+
+	return *result;
+}
+
+RNSVector& RNSVector::Mod(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum)
+{
+	RNSVector* result = new RNSVector(leftRnsNum);
+	result->Mod(rightRnsNum);
 
 	return *result;
 }
@@ -92,7 +144,12 @@ void RNSVector::Input(std::ifstream& fin)
 
 void RNSVector::Output(std::ofstream& fout) const
 {
-	for (int i = 0; i < _size; i++) fout << _digits << " ";
+	for (int i = 0; i < _size; i++)
+	{
+		fout << _digits[i];
+
+		if (i < _size - 1) fout << " ";
+	}
 }
 
 void RNSVector::operator=(const RNSVector& src)
@@ -106,11 +163,19 @@ void RNSVector::operator=(const RNSVector& src)
 	memcpy(_primes, src._primes, _size * sizeof(uint32_t));
 }
 
+void RNSVector::operator=(RNSVector&& src) noexcept
+{
+	_size = src._size;
+
+	std::swap(_digits, src._digits);
+	std::swap(_primes, src._primes);
+}
+
 
 // Deconstructor
 
 RNSVector::~RNSVector()
 {
-	delete[] _digits;
-	delete[] _primes;
+	if (_digits != NULL) delete[] _digits;
+	if (_primes != NULL) delete[] _primes;
 }

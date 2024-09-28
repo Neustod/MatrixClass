@@ -2,12 +2,18 @@
 #include "RNSCrypter.h"
 #include <iostream>
 
+// Constructors
 
 RNSMatrix::RNSMatrix() {}
 
 RNSMatrix::RNSMatrix(int size, const RNSVector& defaultValue) : Matrix<RNSVector>(size, defaultValue) {}
 
 RNSMatrix::RNSMatrix(const RNSMatrix& src) : Matrix<RNSVector>(src) {}
+
+RNSMatrix::RNSMatrix(RNSMatrix&& src) noexcept : Matrix<RNSVector>(src) {}
+
+
+// Arithmetic operations
 
 void RNSMatrix::Add(const Matrix<RNSVector>& right)
 {
@@ -20,6 +26,21 @@ void RNSMatrix::Add(const Matrix<RNSVector>& right)
 		for (int col = 0; col < size; col++)
 		{
 			(*this)[row][col].Add(right[row][col]);
+		}
+	}
+}
+
+void RNSMatrix::Sub(const Matrix<RNSVector>& right)
+{
+	int size = this->GetSize();
+
+	if (size == 0) return;
+
+	for (int row = 0; row < size; row++)
+	{
+		for (int col = 0; col < size; col++)
+		{
+			(*this)[row][col].Sub(right[row][col]);
 		}
 	}
 }
@@ -58,6 +79,14 @@ RNSMatrix& RNSMatrix::Add(const RNSMatrix& left, const RNSMatrix& right)
 	return *result;
 }
 
+RNSMatrix& RNSMatrix::Sub(const RNSMatrix& left, const RNSMatrix& right)
+{
+	RNSMatrix* result{ new RNSMatrix{ left } };
+	result->Sub(right);
+
+	return *result;
+}
+
 RNSMatrix& RNSMatrix::Mul(const RNSMatrix& left, const RNSMatrix& right)
 {
 	RNSMatrix* result{ new RNSMatrix{ left } };
@@ -65,6 +94,9 @@ RNSMatrix& RNSMatrix::Mul(const RNSMatrix& left, const RNSMatrix& right)
 
 	return *result;
 }
+
+
+// Input/output
 
 void RNSMatrix::Input()
 {
@@ -116,8 +148,9 @@ void RNSMatrix::Output(std::ofstream& fout) const
 		for (int col = 0; col < size; col++)
 		{
 			(*this)[row][col].Output(fout);
-			fout << " ";
+
+			if (col < size - 1) fout << "\t";
 		}
-		fout << std::endl;
+		fout << ":" << std::endl;
 	}
 }

@@ -64,9 +64,6 @@
     <ClCompile Include="IntRandomizer.cpp">
       <Filter>Classes\Randomizer\IntRandomizer</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleMatrix.cpp">
-      <Filter>Classes\Matrix\SimpleMatrix</Filter>
-    </ClCompile>
     <ClCompile Include="Tests.cpp">
       <Filter>Testing\Tests</Filter>
     </ClCompile>

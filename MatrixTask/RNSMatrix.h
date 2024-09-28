@@ -13,13 +13,21 @@ public:
 
 	RNSMatrix(const RNSMatrix& src);
 
+	RNSMatrix(RNSMatrix&& src) noexcept;
+
+
 	void Add(const Matrix<RNSVector>& right);
+
+	void Sub(const Matrix<RNSVector>& right);
 
 	void Mul(const Matrix<RNSVector>& right);
 
 	static RNSMatrix& Add(const RNSMatrix& left, const RNSMatrix& right);
 
+	static RNSMatrix& Sub(const RNSMatrix& left, const RNSMatrix& right);
+
 	static RNSMatrix& Mul(const RNSMatrix& left, const RNSMatrix& right);
+
 
 	// Console stream input.
 	void Input() override;

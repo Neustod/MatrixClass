@@ -1,7 +1,13 @@
 #include "RNSRandomizer.h"
 #include <exception>
 
+
+// Constructors
+
 RNSRandomizer::RNSRandomizer() {}
+
+
+// Rand methods
 
 RNSVector& RNSRandomizer::RandRNS(int32_t lBorder, int32_t rBorder, const IRNSCrypter& crypter)
 {

@@ -22,6 +22,9 @@ public:
 	// Copy constructor.
 	RNSVector(const RNSVector& src);
 
+	// Move constructor.
+	RNSVector(RNSVector&& src) noexcept;
+
 
 	size_t Size() const;
 
@@ -37,16 +40,28 @@ public:
 	// Local adding operation for RNS numbers.
 	void Add(const RNSVector& rightRnsNum);
 
+	// Local subliming operation for RNS numbers.
+	void Sub(const RNSVector& rightRnsNum);
+
 	// Local multiplicating operation for RNS numbers.
 	void Mul(const RNSVector& rightRnsNum);
 
+	void Div(const RNSVector& rightRnsNum);
+
+	void Mod(const RNSVector& rightRnsNum);
 
 	// Adding operation for RNS numbers.
 	static RNSVector& Add(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum);
 
+	// Subliming operation for RNS numbers.
+	static RNSVector& Sub(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum);
+
 	// Multiplicating operation for RNS numbers.
 	static RNSVector& Mul(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum);
 
+	static RNSVector& Div(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum);
+
+	static RNSVector& Mod(const RNSVector& leftRnsNum, const RNSVector& rightRnsNum);
 
 	void Input();
 
@@ -56,7 +71,11 @@ public:
 
 	void Output(std::ofstream& fout) const;
 
+
 	void operator=(const RNSVector& src);
+
+	void operator=(RNSVector&& src) noexcept;
+
 
 	// Deconstructor
 	~RNSVector();

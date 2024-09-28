@@ -4,6 +4,8 @@
 #include "IRNSCrypter.h"
 
 
+// RNS values randomizer.
+// Rands uint value and then encodes it to RNS.
 class RNSRandomizer : public IntRandomizer
 {
 public:

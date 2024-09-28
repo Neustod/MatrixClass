@@ -4,7 +4,12 @@
 #include <stdlib.h>
 
 
+// Constructors
+
 IntRandomizer::IntRandomizer() { RandSeed::Instance(); }
+
+
+// Rand methods
 
 int16_t IntRandomizer::RandInt16() { return rand(); }
 
@@ -14,7 +19,6 @@ int16_t IntRandomizer::RandInt16(int16_t lBorder, int16_t rBorder)
 {
 	return rand() % (rBorder - lBorder) + lBorder;
 }
-
 
 int32_t IntRandomizer::RandInt32(int32_t lBorder, int32_t rBorder)
 {

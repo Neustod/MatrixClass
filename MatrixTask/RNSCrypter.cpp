@@ -31,6 +31,15 @@ RNSCrypter::RNSCrypter(const RNSCrypter& src)  : _size(src._size), _P(src._P)
 	memcpy(_multiplications, src._multiplications, _size * sizeof(uint32_t));
 }
 
+RNSCrypter::RNSCrypter(RNSCrypter&& src) noexcept : _size(src._size), _P(src._P)
+{
+	_primes = NULL;
+	_multiplications = NULL;
+
+	std::swap(_primes, src._primes);
+	std::swap(_multiplications, src._multiplications);
+}
+
 
 // Constants calculation
 
@@ -97,22 +106,34 @@ uint32_t RNSCrypter::Decode(const uint32_t* rnsNum) const
 	return preresult % _P;
 }
 
+
+// Operators
+
 void RNSCrypter::operator=(const RNSCrypter& src)
 {
-	if (_size > 0)
+	if (_size != src._size)
 	{
 		delete[] _primes;
 		delete[] _multiplications;
+
+		_primes = new uint32_t[src._size];
+		_multiplications = new uint64_t[src._size];
 	}
 
 	_size = src._size;
 	_P = src._P;
 
-	_primes = new uint32_t[_size];
-	_multiplications = new uint64_t[_size];
-
 	memcpy(_primes, src._primes, _size * sizeof(uint32_t));
 	memcpy(_multiplications, src._multiplications, _size * sizeof(uint32_t));
+}
+
+void RNSCrypter::operator=(RNSCrypter&& src) noexcept
+{
+	_size = src._size;
+	_P = src._P;
+
+	std::swap(_primes, src._primes);
+	std::swap(_multiplications, src._multiplications);
 }
 
 
@@ -120,6 +141,6 @@ void RNSCrypter::operator=(const RNSCrypter& src)
 
 RNSCrypter::~RNSCrypter() 
 {
-	delete[] _primes;
-	delete[] _multiplications;
+	if (_primes != NULL) delete[] _primes;
+	if (_multiplications != NULL) delete[] _multiplications;
 }

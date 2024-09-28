@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+// Int16 | Int32 randomizer. 
+// Triggers RandSeed instance.
 class IntRandomizer
 {
 public:

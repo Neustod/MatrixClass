@@ -1,4 +1,6 @@
 #pragma once
+
+// Singletone base for IntRandomizer.
 class RandSeed
 {
 private:

@@ -155,7 +155,6 @@
     <ClCompile Include="RandSeed.cpp" />
     <ClCompile Include="RNSMatrix.cpp" />
     <ClCompile Include="RNSRandomizer.cpp" />
-    <ClCompile Include="SimpleMatrix.cpp" />
     <ClCompile Include="testing.cpp" />
     <ClCompile Include="IntRandomizer.cpp" />
     <ClCompile Include="RNSCrypter.cpp" />

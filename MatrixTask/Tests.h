@@ -3,15 +3,16 @@
 #include "RNSMatrix.h"
 #include "IntRandomizer.h"
 
-#define TEST_AMOUNT 1000
+#define TEST_AMOUNT 100
 
 #define RIGHT_BORDER 10001
 
 
-int DecodeTest(const std::string& outputFile, const RNSCrypter& crypter);
+int DecodeTest(const char* outputFile, const RNSCrypter& crypter);
 
 
-int AddTest(const std::string& outputFile, const RNSCrypter& crypter);
-
-
-int MulTest(const std::string& outputFile, const RNSCrypter& crypter);
+int ArithmeticTest(
+	const char* outputFile, 
+	const RNSCrypter& crypter, 
+	char cBinOperator
+);

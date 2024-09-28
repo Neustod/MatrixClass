@@ -25,6 +25,7 @@ public:
 	// Copy constructor
 	RNSCrypter(const RNSCrypter& src);
 
+	RNSCrypter(RNSCrypter&& src) noexcept;
 
 	// Returns a pointer to an array of bases.
 	const uint32_t* Primes() const;
@@ -45,6 +46,8 @@ public:
 	uint32_t Decode(const uint32_t* rnsNum) const;
 
 	void operator=(const RNSCrypter& src);
+
+	void operator=(RNSCrypter&& src) noexcept;
 
 	// Deconstructor
 	~RNSCrypter();

@@ -2,6 +2,8 @@
 #include "Tests.h"
 #include <string>
 
+#define TEST_FOLDER "../Tests/"
+
 
 using namespace std;
 
@@ -10,8 +12,8 @@ using namespace std;
 int main()
 {
     vector<RNSCrypter> cryps;
-    string filename;
-
+    string filename, timeFile, folderName{ TEST_FOLDER };
+    
     vector<vector<uint32_t>> primes
     {
         { 7, 11, 13, 17, 19, 23, 29, 31 },
@@ -30,17 +32,25 @@ int main()
 
     for (int i = 0; i < cryps.size(); i++)
     {
-        filename = "DecodeTest" + to_string(i) + ".txt";
-        cout << "DecodeTest errors: " << DecodeTest(filename.c_str(), cryps[i]) << endl;
+        filename = folderName + "DecodeTest" + to_string(i) + ".txt";
+        timeFile = folderName + "DecodeTime" + to_string(i) + ".txt";
 
-        filename = "AddTestTest" + to_string(i) + ".txt";
-        cout << "AddTest errors: " << ArithmeticTest(filename.c_str(), cryps[i], '+') << endl;
+        cout << "DecodeTest errors: " << DecodeTest(filename.c_str(), timeFile.c_str(), cryps[i]) << endl;
 
-        filename = "SubTest" + to_string(i) + ".txt";
-        cout << "SubTest errors: " << ArithmeticTest(filename.c_str(), cryps[i], '-') << endl;
+        filename = folderName + "AddTest" + to_string(i) + ".txt";
+        timeFile = folderName + "AddTime" + to_string(i) + ".txt";
 
-        filename = "MulTest" + to_string(i) + ".txt";
-        cout << "MulTest errors: " << ArithmeticTest(filename.c_str(), cryps[i], '*') << "\n\n";
+        cout << "AddTest errors: " << ArithmeticTest(filename.c_str(), timeFile.c_str(), cryps[i], '+') << endl;
+
+        filename = folderName + "SubTest" + to_string(i) + ".txt";
+        timeFile = folderName + "SubTime" + to_string(i) + ".txt";
+
+        cout << "SubTest errors: " << ArithmeticTest(filename.c_str(), timeFile.c_str(), cryps[i], '-') << endl;
+
+        filename = folderName + "MulTest" + to_string(i) + ".txt";
+        timeFile = folderName + "MulTime" + to_string(i) + ".txt";
+
+        cout << "MulTest errors: " << ArithmeticTest(filename.c_str(), timeFile.c_str(), cryps[i], '*') << "\n\n";
     }
 
     system("pause");

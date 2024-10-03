@@ -30,8 +30,10 @@ int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile, c
     {
         encoded = rander.RandInt32();
 
+        RNSVector test{ crypter };
+
         start = std::chrono::high_resolution_clock::now();
-        RNSVector test{ crypter, encoded };
+        test.Encode(crypter, encoded);
         end = std::chrono::high_resolution_clock::now();
 
         ftime << crypter.Size() << " : " << "Encoded : " << encoded << " : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << std::endl;

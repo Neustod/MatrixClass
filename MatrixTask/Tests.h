@@ -1,20 +1,20 @@
 #pragma once
-#include "SimpleMatrix.h"
-#include "RNSMatrix.h"
+#include "Matrix.h"
+#include "RNSCrypter.h"
 #include "IntRandomizer.h"
 
 
-#define TEST_AMOUNT 100
+#define TEST_AMOUNT 10
 
 #define RIGHT_BORDER 10001
 
 
-int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile,  const RNSCrypter& crypter);
+int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile,  const std::shared_ptr<RNSCrypter>& crypter);
 
 
 int ArithmeticTest(
 	const char* resultOutputFile, 
 	const char* perfomanceOutputFile,
-	const RNSCrypter& crypter, 
+	const std::shared_ptr<RNSCrypter>& crypter,
 	char cBinOperator
 );

@@ -1,11 +1,12 @@
 #include "Tests.h"
 #include <fstream>
 #include <chrono>
+#include "RNSVector.h"
 
 #define TEST_RATIO std::chrono::nanoseconds
 
 
-int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile, const RNSCrypter& crypter)
+int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile, const std::shared_ptr<RNSCrypter>& crypter)
 {
     std::ofstream fout{ resultOutputFile };
     std::ofstream ftime{ perfomanceOutputFile };
@@ -18,9 +19,9 @@ int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile, c
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 
 
-    for (int i = 0; i < crypter.Size(); i++) 
+    for (int i = 0; i < crypter.get()->Size(); i++) 
     {
-        fout << crypter.Primes()[i] << " ";
+        fout << (uint32_t)crypter.get()->Primes()[i] << " ";
     }
     fout << "\n";
 
@@ -33,20 +34,19 @@ int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile, c
         RNSVector test{ crypter };
 
         start = std::chrono::high_resolution_clock::now();
-        test.Encode(crypter, encoded);
+        test.Encode(encoded);
         end = std::chrono::high_resolution_clock::now();
 
-        ftime << crypter.Size() << " : " << "Encoded : " << encoded << " : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << std::endl;
+        ftime << crypter.get()->Size() << " : " << "Encoded : " << encoded << " : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << std::endl;
 
         start = std::chrono::high_resolution_clock::now();
-        decoded = test.Decode(crypter); 
+        decoded = test.Normalize().Decode(); 
         end = std::chrono::high_resolution_clock::now();
 
-        ftime << crypter.Size() << " : " << "Decoded : " << encoded << " : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << std::endl;
+        ftime << crypter.get()->Size() << " : " << "Decoded : " << encoded << " : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << std::endl;
 
         fout << i << "\n:encoded=" << encoded << "\n:decoded=" << decoded << "\n:RNS= ";
-
-        test.Output(fout);
+        fout << test.ToString() << ":";
 
         if (encoded == decoded)
         {
@@ -64,13 +64,15 @@ int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile, c
     ftime.close();
 
     return errNumber;
+
+    return 0;
 }
 
 
 int ArithmeticTest(
     const char* resultOutputFile, 
     const char* perfomanceOutputFile,
-    const RNSCrypter& crypter, 
+    const std::shared_ptr<RNSCrypter>& crypter,
     char cBinOperator)
 {
     if (cBinOperator != '+' && cBinOperator != '-' && cBinOperator != '*') return -1;
@@ -84,10 +86,10 @@ int ArithmeticTest(
 
     int errNumber = 0;
     bool bInnerError = false;
-    int matrixSize = 0;
+    size_t matrixSize = 0;
     uint32_t tmp = 0;
 
-    for (int i = 0; i < crypter.Size(); i++) fout << crypter.Primes()[i] << " ";
+    for (int i = 0; i < crypter.get()->Size(); i++) fout << crypter.get()->Primes()[i] << " ";
     fout << "\n";
 
     ftime << "PrimesCount : Matrix size : Operation : Time for simple type (ns) : Time for RNS (ns)" << std::endl;
@@ -98,8 +100,8 @@ int ArithmeticTest(
 
         bInnerError = false;
 
-        SimpleMatrix<uint32_t> a{ matrixSize, 0 }, b{ matrixSize, 0 };
-        RNSMatrix rnsA{ matrixSize, RNSVector{crypter} }, rnsB{ matrixSize, RNSVector{crypter} };
+        Matrix<uint32_t> a{ matrixSize, 0 }, b{ matrixSize, 0 };
+        Matrix<RNSVector> rnsA{ matrixSize, RNSVector{crypter} }, rnsB{ matrixSize, RNSVector{crypter} };
 
         fout << i << ":\nsize=" << matrixSize << ":\n";
 
@@ -118,22 +120,15 @@ int ArithmeticTest(
                     b[row][col] = rander.RandInt32(0, RIGHT_BORDER / 2);
                 }
 
-                rnsA[row][col].Encode(crypter, a[row][col]);
-                rnsB[row][col].Encode(crypter, b[row][col]);
+                rnsA[row][col].Encode(a[row][col]);
+                rnsB[row][col].Encode(b[row][col]);
             }
         }
 
-        fout << "m1:\n";
-        a.Output(fout);
-
-        fout << "m2:\n";
-        b.Output(fout);
-
-        fout << "(rns)m1:\n";
-        rnsA.Output(fout);
-
-        fout << "(rns)m2:\n";
-        rnsB.Output(fout);
+        fout << "m1:\n" << a.ToString();
+        fout << "m2:\n" << b.ToString();
+        fout << "(rns)m1:\n" << rnsA.ToString();
+        fout << "(rns)m2:\n" << rnsB.ToString();
 
         switch (cBinOperator)
         {
@@ -142,7 +137,7 @@ int ArithmeticTest(
             a.Add(b);
             end = std::chrono::high_resolution_clock::now();
 
-            ftime << crypter.Size() << " : " << a.GetSize() << " : + : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << " : ";
+            ftime << crypter.get()->Size() << " : " << a.size() << " : + : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << " : ";
 
             start = std::chrono::high_resolution_clock::now();
             rnsA.Add(rnsB);
@@ -156,7 +151,7 @@ int ArithmeticTest(
             a.Sub(b);
             end = std::chrono::high_resolution_clock::now();
 
-            ftime << crypter.Size() << " : " << a.GetSize() << " : - : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << " : ";
+            ftime << crypter.get()->Size() << " : " << a.size() << " : - : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << " : ";
 
             start = std::chrono::high_resolution_clock::now();
             rnsA.Sub(rnsB);
@@ -170,7 +165,7 @@ int ArithmeticTest(
             a.Mul(b);
             end = std::chrono::high_resolution_clock::now();
 
-            ftime << crypter.Size() << " : " << a.GetSize() << " : * : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << " : ";
+            ftime << crypter.get()->Size() << " : " << a.size() << " : * : " << std::chrono::duration_cast<TEST_RATIO>(end - start).count() << " : ";
 
             start = std::chrono::high_resolution_clock::now();
             rnsA.Mul(rnsB);
@@ -184,18 +179,16 @@ int ArithmeticTest(
             return -1;
         }
 
-        fout << "(rns)m1"<< cBinOperator <<"m2:\n";
-        rnsA.Output(fout);
-
-        fout << "m1"<< cBinOperator <<"m2:\n";
-        a.Output(fout);
+        fout << "(rns)m1"<< cBinOperator <<"m2:\n" << rnsA.ToString();
+        fout << "(rns)m1" << cBinOperator << "m2:\n" << rnsA.ToString();
+        fout << "m1"<< cBinOperator <<"m2:\n" << a.ToString();
 
         fout << "(decoded)m1"<< cBinOperator <<"m2:\n";
         for (int row = 0; row < matrixSize; row++)
         {
             for (int col = 0; col < matrixSize; col++)
             {
-                tmp = rnsA[row][col].Decode(crypter);
+                tmp = rnsA[row][col].Normalize().Decode();
 
                 if (tmp != a[row][col]) bInnerError = true;
 
@@ -216,4 +209,6 @@ int ArithmeticTest(
     ftime.close();
 
     return errNumber;
+
+    return 0;
 }

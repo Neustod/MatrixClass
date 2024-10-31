@@ -17,9 +17,6 @@
     <Filter Include="Classes\Randomizer\RandCore">
       <UniqueIdentifier>{e6824785-c2e9-4bf4-b129-b409f7e81d49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Matrix\RNSMatrix">
-      <UniqueIdentifier>{eca4a3bc-cad6-4b03-a984-5ea03a01e8fc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Classes\Randomizer\RNSRandomizer">
       <UniqueIdentifier>{feca1f45-a56b-4e76-bf06-da9ad95fdf3d}</UniqueIdentifier>
     </Filter>
@@ -35,11 +32,11 @@
     <Filter Include="Classes\RNSVector">
       <UniqueIdentifier>{6164692f-19be-4ce7-bc84-82b9a02981d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Matrix\SimpleMatrix">
-      <UniqueIdentifier>{4b1d325b-b1aa-4ec8-9953-acb8b0f9eb7f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Testing\Tests">
       <UniqueIdentifier>{906491df-a731-4a5a-85a9-8d84f51cfe39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Testing\Test functions">
+      <UniqueIdentifier>{a78d2743-f99e-4ce2-93f6-c945cf6f7db3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -49,7 +46,7 @@
     <ClCompile Include="RNSCrypter.cpp">
       <Filter>Classes\Crypter\RNSCrypter</Filter>
     </ClCompile>
-    <ClCompile Include="testing.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Testing</Filter>
     </ClCompile>
     <ClCompile Include="RNSRandomizer.cpp">
@@ -58,14 +55,14 @@
     <ClCompile Include="RandSeed.cpp">
       <Filter>Classes\Randomizer\RandCore</Filter>
     </ClCompile>
-    <ClCompile Include="RNSMatrix.cpp">
-      <Filter>Classes\Matrix\RNSMatrix</Filter>
-    </ClCompile>
     <ClCompile Include="IntRandomizer.cpp">
       <Filter>Classes\Randomizer\IntRandomizer</Filter>
     </ClCompile>
     <ClCompile Include="Tests.cpp">
       <Filter>Testing\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="TestFunctions.cpp">
+      <Filter>Testing\Test functions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,23 +78,17 @@
     <ClInclude Include="RandSeed.h">
       <Filter>Classes\Randomizer\RandCore</Filter>
     </ClInclude>
-    <ClInclude Include="RNSMatrix.h">
-      <Filter>Classes\Matrix\RNSMatrix</Filter>
-    </ClInclude>
     <ClInclude Include="IntRandomizer.h">
       <Filter>Classes\Randomizer\IntRandomizer</Filter>
-    </ClInclude>
-    <ClInclude Include="IRNSCrypter.h">
-      <Filter>Classes\Crypter</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleMatrix.h">
-      <Filter>Classes\Matrix\SimpleMatrix</Filter>
     </ClInclude>
     <ClInclude Include="Matrix.h">
       <Filter>Classes\Matrix</Filter>
     </ClInclude>
     <ClInclude Include="Tests.h">
       <Filter>Testing\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="TestFunctions.h">
+      <Filter>Testing\Test functions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

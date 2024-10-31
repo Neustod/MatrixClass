@@ -9,7 +9,7 @@ RNSRandomizer::RNSRandomizer() {}
 
 // Rand methods
 
-RNSVector& RNSRandomizer::RandRNS(int32_t lBorder, int32_t rBorder, const IRNSCrypter& crypter)
+RNSVector& RNSRandomizer::RandRNS(int32_t lBorder, int32_t rBorder, const std::shared_ptr<RNSCrypter>& crypter)
 {
 	if (lBorder < 0) throw std::exception("Error: RNSRandomizer.RandRNS: negative value.");
 

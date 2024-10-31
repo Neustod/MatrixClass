@@ -2,105 +2,142 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 
 // Abstract Matrix template class. 
 // Based on STL Vectors.
 template<typename T>
-class Matrix
+class Matrix : public std::vector<std::vector<T>>
 {
 private:
-	std::vector<std::vector<T>> _vector;
-	int _size;
+	T _defaultValue;
 
 public:
 	// Default constructor.
-	Matrix() : _size(0), _vector(std::vector<std::vector<T>>(0)) {}
+	Matrix(const T& defaultValue) : std::vector<std::vector<T>>(std::vector<std::vector<T>>(0)), _defaultValue(defaultValue) {}
+
+	Matrix(T&& defaultValue) : std::vector<std::vector<T>>(std::vector<std::vector<T>>(0)), _defaultValue(defaultValue) {}
 
 	// Constructor with initial size and default values.
-	Matrix(int size, const T& defaultValue)
-	{
-		try
-		{
-			SetSize(size, defaultValue);
-		}
-		catch (std::exception e)
-		{
-			std::cout << "RuntimeError: Matrix." << e.what() << std::endl;
-		}
-	}
+	Matrix(size_t size, const T& defaultValue) : std::vector<std::vector<T>>(std::vector<std::vector<T>>(size, std::vector<T>(size, defaultValue))), _defaultValue(defaultValue) {}
 
 	// Copying constructor.
-	Matrix(const Matrix<T>& src) : _size(src._size), _vector(src._vector) {}
+	Matrix(const Matrix<T>& src) : std::vector<std::vector<T>>(src), _defaultValue(src._defaultValue) {}
 
 	// Moving constructor.
-	Matrix(Matrix<T>&& src) noexcept : _size(src._size), _vector(std::move(src._vector)) {}
-
-
-	// Changes Matrix's size. Allocates memory with default value 0.
-	// Throws exception.
-	void SetSize(int size, const T& defaultValue)
-	{
-		if (size < 0) throw std::exception("Matrix.SetSize: negative matrix size.");
-
-		_size = size;
-
-		_vector.resize(_size);
-		for (int i = 0; i < _size; i++) _vector[i].resize(_size, defaultValue);
-	}
-
-	// Get actual Matrix's size.
-	int GetSize() const { return _size; }
-
+	Matrix(Matrix<T>&& src) noexcept : std::vector<std::vector<T>>(std::move(src)), _defaultValue(std::move(src._defaultValue)) {}
 
 	// Adding Matrixes.
 	// Result will be stored in the current Matrix object.
-	virtual void Add(const Matrix<T>& right) = 0;
+	virtual void Add(const Matrix<T>& right) 
+	{
+		for (size_t row = 0; row < this->size(); row++)
+		{
+			for (size_t col = 0; col < this->size(); col++)
+			{
+				(*this)[row][col] += right[row][col];
+			}
+		}
+	};
 
 	// Subliming Matrixes.
 	// Result will be stored in the current Matrix object.
-	virtual void Sub(const Matrix<T>& right) = 0;
+	virtual void Sub(const Matrix<T>& right) 
+	{
+		for (size_t row = 0; row < this->size(); row++)
+		{
+			for (size_t col = 0; col < this->size(); col++)
+			{
+				(*this)[row][col] -= right[row][col];
+			}
+		}
+	};
 
 	// Multiplying Matrixes.
 	// Result will be stored in the current Matrix object.
-	virtual void Mul(const Matrix<T>& right) = 0;
+	virtual void Mul(const Matrix<T>& right) 
+	{
+		std::vector<T> tmpRow(this->size(), _defaultValue);
 
-	// Console stream input.
-	virtual void Input() = 0;
+		for (size_t row = 0; row < this->size(); row++)
+		{
+			for (size_t col = 0; col < this->size(); col++)
+			{
+				tmpRow[col] = _defaultValue;
 
-	// Console stream output.
-	virtual void Output() const = 0;
+				for (size_t inner = 0; inner < this->size(); inner++)
+				{
+					tmpRow[col] += (*this)[row][inner] * right[inner][col];
+				}
+			}
+			for (size_t col = 0; col < this->size(); col++) (*this)[row][col] = tmpRow[col];
+		}
+	};
+
+	std::string ToString() const 
+	{
+		using namespace std;
+
+		std::string result{ "" };
+		
+		for (size_t row = 0; row < this->size(); row++)
+		{
+			for (size_t col = 0; col < this->size(); col++)
+			{
+				result += to_string((*this)[row][col]);
+				result += ":";
+			}
+			result += "\n";
+		}
+
+		return result;
+	};
 
 	// File stream input.
-	virtual void Input(std::ifstream& fin) = 0;
+	virtual void Input(std::ifstream& fin) 
+	{
+		size_t size{ 0 };
+		
+		fin >> size;
+		
+		Matrix<T>& buffer = *new Matrix<T>{size, _defaultValue};
+
+		for (size_t row = 0; row < this->size(); row++) 
+		{
+			for (size_t col = 0; col < this->size(); col++)
+			{
+				fin >> buffer[row][col];
+			}
+		}
+
+		*this = std::move(buffer);
+	}
 
 	// File stream output.
-	virtual void Output(std::ofstream& fout) const = 0;
+	virtual void Output(std::ofstream& fout) const 
+	{
+		fout << this->size();
+
+		for (size_t row = 0; row < this->size(); row++)
+		{
+			for (size_t col = 0; col < this->size(); col++)
+			{
+				fout << (*this)[row][col];
+			}
+		}
+	}
 
 
 	void operator=(const Matrix<T>& src)
 	{
-		_size = src._size;
-		_vector = src._vector;
+		std::vector<std::vector<T>>(src);
+		_defaultValue = src._defaultValue;
 	}
 
 	void operator=(Matrix<T>&& src) noexcept
 	{
-		_size = src._size;
-		_vector = std::move(src._vector);
-	}
-
-	std::vector<T>& operator[](int i) {
-		if (i < 0) throw std::exception("Matrix.operator[]: negative index.");
-		if (i > _size - 1) throw std::exception("Matrix.operator[]: out of range.");
-
-		return _vector[i];
-	}
-
-	const std::vector<T>& operator[](int i) const {
-		if (i < 0) throw std::exception("Matrix.operator[]: negative index.");
-		if (i > _size - 1) throw std::exception("Matrix.operator[]: out of range.");
-
-		return _vector[i];
+		std::vector <std::vector <T>>(std::move(src));
+		_defaultValue = std::move(src._defaultValue);
 	}
 };

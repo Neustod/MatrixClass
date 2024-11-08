@@ -86,10 +86,11 @@ uint32_t RNSCrypter::Decode(const uint8_t* rnsNum) const
 
 uint32_t RNSCrypter::DeepDecode(const uint8_t* rnsNum) const
 {
-	RNSVector tmp{ std::make_shared<RNSCrypter>(*this) };
-	RNSVector two{ std::make_shared<RNSCrypter>(*this), 2 };
+	RNSVector rnsResult{ std::make_shared<RNSCrypter>(*this) };
+	RNSVector two{ std::make_shared<RNSCrypter>(*this) };
+	RNSVector err{ std::make_shared<RNSCrypter>(*this), 256 };
 
-	uint64_t result{ 0 };
+	uint32_t result{ 0 };
 	uint32_t deep{ 0 };
 
 	auto IsZero = [](const RNSVector& rns)
@@ -98,20 +99,20 @@ uint32_t RNSCrypter::DeepDecode(const uint8_t* rnsNum) const
 		return true;
 	};
 
-	for (size_t i = 0; i < _size; i++) tmp[i] = rnsNum[i];
+	for (size_t i = 0; i < _size; i++) rnsResult[i] = rnsNum[i];
 
-	while (!IsZero(tmp))
+	while (!IsZero(rnsResult))
 	{
-		deep = tmp.DivisionDeep();
-		result |= (uint64_t)1 << deep;
+		two.Encode(2);
+
+		deep = rnsResult.DivisionDeep();
+		result |= (uint32_t)1 << deep;
 
 		two.Pow(deep);
-		two.Normalize();
+		two.OverflowCorrection(err).Normalize();
 
-		tmp -= two;
-		tmp.Normalize();
-
-		for (size_t i = 0; i < _size; i++) two[i] = 2;
+		rnsResult -= two;
+		rnsResult.OverflowCorrection(err).Normalize();
 	}
 
 	return (uint32_t)result;
@@ -122,6 +123,8 @@ uint32_t RNSCrypter::DeepDecode(const uint8_t* rnsNum) const
 
 void RNSCrypter::operator=(const RNSCrypter& src)
 {
+	if (this == &src) return;
+
 	if (_size != src._size)
 	{
 		delete[] _primes;

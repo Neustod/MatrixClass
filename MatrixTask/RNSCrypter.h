@@ -44,7 +44,7 @@ public:
 	// Decodes RNS code to uint32 number.
 	uint32_t Decode(const uint8_t* rnsNum) const;
 
-	// TODO: DeepDecode test function
+	// TODO: [RNSCrypter.DeepDecode] test function
 	uint32_t DeepDecode(const uint8_t* rnsNum) const;
 
 public:

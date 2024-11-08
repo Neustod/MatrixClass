@@ -15,8 +15,6 @@ private:
 
 	std::shared_ptr<RNSCrypter> _crypter;
 
-	uint8_t maxDeep = 100;
-
 public:
 	// Default constructor was deleted, so
 	// you have to initialize Crypter first.
@@ -39,6 +37,8 @@ public:
 	const std::shared_ptr<RNSCrypter>& Crypter() const { return _crypter; }
 
 	const uint8_t* Digits() const { return _digits; }
+
+	uint8_t* Digits() { return _digits; }
 
 public:
 	// Returns decoded value by decrypting RNS number in the Crypter.
@@ -68,12 +68,17 @@ public:
 	void Pow(uint32_t degree);
 
 	// Overflow correction
+	RNSVector& OverflowCorrection(const RNSVector& errorValue);
+
+	// Correction by modules
 	RNSVector& Normalize();
 
 public:
-	uint8_t DivisionDeep() const;
+	uint8_t DivisionDeep(uint32_t maxDeep = 21) const;
 
 	uint32_t DeepDecode() const { return _crypter.get()->DeepDecode(_digits); };
+
+	int DeepCompare(const RNSVector rnsRight, uint32_t maxDeep = 21) const;
 
 public:
 	void Input(std::ifstream& fin);
@@ -150,7 +155,7 @@ public:
 		for (size_t i = 0; i < _size; i++)
 		{
 			_overflowBank[i] -= (_digits[i] == 0);
-			_digits[i] = (_digits[i] - 1);
+			--_digits[i];
 		}
 
 		return *this;

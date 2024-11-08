@@ -16,10 +16,17 @@ int main()
     auto pCrypter = std::make_shared<RNSCrypter>(primes, 8);
     RNSRandomizer rander;
 
-    RNSVector a{ pCrypter, 50 }, b{ pCrypter, 7 };
+    RNSVector a{ pCrypter, 28 }, b{ pCrypter, 28 }, err{ pCrypter, 256 };
 
-    std::cout << (a - b - b - b - b).Normalize().Decode() << std::endl;
-    std::cout << (a - b - b - b - b).Normalize().ToString() << std::endl;
+    for (auto i = 0; i < 100; i++) 
+    {
+        int cmpResult{ a.DeepCompare(b) };
+
+        std::cout << a.Decode() << "\t" << (cmpResult > 0 ? ">" : cmpResult < 0 ? "<" : "=") << "\t" << b.Decode() << std::endl;
+
+        a.Encode(rander.RandInt16(0, 256));
+        b.Encode(rander.RandInt16(0, 256));
+    }
 
     system("pause");
     return 0;

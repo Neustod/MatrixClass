@@ -19,7 +19,7 @@ int DecodeTest(const char* resultOutputFile, const char* perfomanceOutputFile, c
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 
 
-    for (int i = 0; i < crypter.get()->Size(); i++) 
+    for (size_t i = 0; i < crypter.get()->Size(); i++) 
     {
         fout << (uint32_t)crypter.get()->Primes()[i] << " ";
     }
@@ -89,7 +89,7 @@ int ArithmeticTest(
     size_t matrixSize = 0;
     uint32_t tmp = 0;
 
-    for (int i = 0; i < crypter.get()->Size(); i++) fout << crypter.get()->Primes()[i] << " ";
+    for (size_t i = 0; i < crypter.get()->Size(); i++) fout << crypter.get()->Primes()[i] << " ";
     fout << "\n";
 
     ftime << "PrimesCount : Matrix size : Operation : Time for simple type (ns) : Time for RNS (ns)" << std::endl;
@@ -105,9 +105,9 @@ int ArithmeticTest(
 
         fout << i << ":\nsize=" << matrixSize << ":\n";
 
-        for (int row = 0; row < matrixSize; row++)
+        for (size_t row = 0; row < matrixSize; row++)
         {
-            for (int col = 0; col < matrixSize; col++)
+            for (size_t col = 0; col < matrixSize; col++)
             {
                 if (cBinOperator != '-') 
                 {
@@ -184,9 +184,9 @@ int ArithmeticTest(
         fout << "m1"<< cBinOperator <<"m2:\n" << a.ToString();
 
         fout << "(decoded)m1"<< cBinOperator <<"m2:\n";
-        for (int row = 0; row < matrixSize; row++)
+        for (size_t row = 0; row < matrixSize; row++)
         {
-            for (int col = 0; col < matrixSize; col++)
+            for (size_t col = 0; col < matrixSize; col++)
             {
                 tmp = rnsA[row][col].Normalize().Decode();
 

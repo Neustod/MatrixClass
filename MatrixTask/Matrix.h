@@ -131,13 +131,13 @@ public:
 
 	void operator=(const Matrix<T>& src)
 	{
-		std::vector<std::vector<T>>(src);
 		_defaultValue = src._defaultValue;
+		std::vector<std::vector<T>>::operator=(src);
 	}
 
 	void operator=(Matrix<T>&& src) noexcept
 	{
-		std::vector <std::vector <T>>(std::move(src));
 		_defaultValue = std::move(src._defaultValue);
+		std::vector<std::vector<T>>::operator=(std::move(src));		
 	}
 };

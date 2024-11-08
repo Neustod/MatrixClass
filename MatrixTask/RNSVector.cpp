@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "TestFunctions.h"
 
 #ifdef _DEBUG
 #define DEBUG(x) x
@@ -65,7 +66,7 @@ void RNSVector::Add(const RNSVector& rightRnsNum)
 
 	uint16_t extension{ 0 };
 
-	for (int i = 0; i < _size; i++) 
+	for (auto i = 0; i < _size; i++) 
 	{
 		extension = ((uint16_t)_digits[i] + rightRnsNum._digits[i]);
 		_overflowBank[i] += (extension >> 8) + rightRnsNum._overflowBank[i];
@@ -77,7 +78,7 @@ void RNSVector::Sub(const RNSVector& rightRnsNum)
 {
 	if (_size != rightRnsNum._size) throw std::exception("RNSVector.Add: Different vector sizes.");
 
-	for (int i = 0; i < _size; i++)
+	for (auto i = 0; i < _size; i++)
 	{
 		_overflowBank[i] += -(_digits[i] < rightRnsNum._digits[i]) - rightRnsNum._overflowBank[i];
 		_digits[i] = _digits[i] - rightRnsNum._digits[i];
@@ -90,18 +91,18 @@ void RNSVector::Mul(const RNSVector& rightRnsNum)
 
 	uint16_t extension{ 0 };
 
-	for (int i = 0; i < _size; i++)
+	for (auto i = 0; i < _size; i++)
 	{
 		extension = ((uint16_t)_digits[i] * rightRnsNum._digits[i]);
 		_overflowBank[i] += (extension >> 8) + rightRnsNum._overflowBank[i];
-		_digits[i] = (uint8_t)extension;
+		_digits[i] = (uint8_t)(extension % 256);
 	}
 }
 
-// TODO: Div test function
+// TODO: [RNSVector.Div] remove dependences from bases
 void RNSVector::Div(const RNSVector& rightRnsNum)
 {
-	for (int i = 0; i < _size; i++)
+	for (auto i = 0; i < _size; i++)
 	{
 		if (_digits[i] == 0) continue;
 
@@ -118,9 +119,10 @@ void RNSVector::Div(const RNSVector& rightRnsNum)
 	}
 }
 
+// TODO: [RNSVector.DivByTwo] get rid of bases
 bool RNSVector::DivByTwo()
 {
-	for (int i = 0; i < _size; i++)
+	for (auto i = 0; i < _size; i++)
 	{
 		if (_digits[i] == 0) continue;
 
@@ -138,45 +140,61 @@ bool RNSVector::DivByTwo()
 	return true;
 }
 
+// TODO: [RNSVector.Pow] get rid of bases
 void RNSVector::Pow(uint32_t degree)
 {
-	if (degree == 0) { for (int i = 0; i < _size; i++) _digits[i] = 1; return; };
+	if (degree == 0) { for (auto i = 0; i < _size; i++) _digits[i] = 1; return; };
 	if (degree == 1) return;
 
 	uint32_t tmp{ 0 };
 
-	for (int i = 0; i < _size; i++) 
+	for (auto i = 0; i < _size; i++) 
 	{
 		tmp = _digits[i];
 
-		for (int j = 0; j < degree - 1; j++) 
+		for (auto j = 0; j < degree - 1; j++) 
 		{
 			_digits[i] = (_digits[i] * tmp) % _primes[i];
 		}
 	}
 }
 
-RNSVector& RNSVector::Normalize()
+RNSVector& RNSVector::OverflowCorrection(const RNSVector& errorValue)
 {
-	for (int i = 0; i < _size; i++) 
-	{ 
-		_digits[i] = ((uint8_t)(_digits[i] + (uint16_t)_overflowBank[i] * (255 % _primes[i] + 1))) % _primes[i]; 
-	}
+	uint16_t extension{ 0 };
 
-	memset(_overflowBank, 0, _size * sizeof(uint8_t));
+	for (auto i = 0; i < _size; i++) 
+	{
+		extension = _digits[i] + (uint16_t)_overflowBank[i] * errorValue[i];
+		_digits[i] = extension % 256;
+
+		_overflowBank[i] = 0;
+	}
 
 	return *this;
 }
 
-// TODO: DivisionDeep test function
-uint8_t RNSVector::DivisionDeep() const
+RNSVector& RNSVector::Normalize()
 {
+	for (auto i = 0; i < _size; i++) 
+	{ 
+		_digits[i] %= _primes[i];
+	}
+
+	return *this;
+}
+
+// TODO: [RNSVector.DivisionDeep] get rid of Normalization
+uint8_t RNSVector::DivisionDeep(uint32_t maxDeep) const
+{
+	RNSVector err{ _crypter, 256 };
+
 	uint32_t deep{ 0 };
 	size_t currSize{ 0 };
 
 	auto IsNumber = [](const RNSVector& rns, uint32_t number)
 	{
-		for (int i = 0; i < rns.Size(); i++)
+		for (auto i = 0; i < rns.Size(); i++)
 			if (rns[i] != number) return false;
 		return true;
 	};
@@ -187,17 +205,17 @@ uint8_t RNSVector::DivisionDeep() const
 
 	nums.push_back(RNSVector{ *this });
 
-	while (deep <= maxDeep) 
+	while (deep < maxDeep) 
 	{
 		currSize = nums.size();
 		nums.reserve(currSize << 1);
 
-		for (int i = 0; i < currSize; i++)
+		for (auto i = 0; i < currSize; i++)
 		{
 			if (IsNumber(nums[i], 1)) return deep;
 
 			nums.emplace_back(nums[i]);
-			(--nums[nums.size() - 1]).Normalize();
+			(--nums[nums.size() - 1]).OverflowCorrection(err).Normalize();
 
 			nums[i].DivByTwo();
 			nums.back().DivByTwo();
@@ -210,14 +228,36 @@ uint8_t RNSVector::DivisionDeep() const
 }
 
 
+// TODO: [RNSVector.DeepCompare] get rid of Normalization
+int RNSVector::DeepCompare(const RNSVector rnsRight, uint32_t maxDeep) const
+{
+	RNSVector err{ _crypter, 256 };
+	RNSVector rnsLeft{ *this };
+
+	uint32_t leftDeep = this->DivisionDeep(maxDeep);
+	uint32_t rightDeep = rnsRight.DivisionDeep(leftDeep + 1);
+	uint32_t resultDeep{ 0 };
+
+	if (leftDeep == rightDeep) 
+	{
+		rnsLeft -= rnsRight;
+		resultDeep = rnsLeft.OverflowCorrection(err).Normalize().DivisionDeep(leftDeep + 1);
+
+		return (resultDeep == 0) * rnsLeft[0] + (resultDeep != 0) * (leftDeep - resultDeep);
+	}
+
+	return leftDeep - rightDeep;
+}
+
+
 void RNSVector::Input(std::ifstream& fin)
 {
-	for (int i = 0; i < _size; i++) fin >> _digits[i];
+	for (auto i = 0; i < _size; i++) fin >> _digits[i];
 }
 
 void RNSVector::Output(std::ofstream& fout) const
 {
-	for (int i = 0; i < _size; i++)
+	for (auto i = 0; i < _size; i++)
 	{
 		fout << _digits[i];
 
@@ -243,7 +283,7 @@ bool RNSVector::operator==(const RNSVector& right) const
 {
 	if (_size != right._size) return false;
 
-	for (int i = 0; i < _size; i++) 
+	for (auto i = 0; i < _size; i++) 
 	{
 		if (_digits[i] != right._digits[i]) return false;
 	}
@@ -254,13 +294,21 @@ bool RNSVector::operator==(const RNSVector& right) const
 
 void RNSVector::operator=(const RNSVector& src)
 {
+	if (this == &src) return;
+
 	_size = src._size;
 	_crypter = src._crypter;
 
-	_digits = new uint8_t[_size];
-	memcpy(_digits, src._digits, _size * sizeof(uint8_t));
+	if (_digits != nullptr || _overflowBank != nullptr) 
+	{
+		delete[] _digits;
+		delete[] _overflowBank;
+	}
 
+	_digits = new uint8_t[_size];
 	_overflowBank = new uint8_t[_size];
+
+	memcpy(_digits, src._digits, _size * sizeof(uint8_t));
 	memcpy(_overflowBank, src._overflowBank, _size * sizeof(uint8_t));
 }
 

@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="RandSeed.cpp" />
     <ClCompile Include="RNSRandomizer.cpp" />
+    <ClCompile Include="RNSVectorLight.cpp" />
     <ClCompile Include="TestFunctions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="IntRandomizer.cpp" />
@@ -166,8 +167,12 @@
     <ClInclude Include="RandSeed.h" />
     <ClInclude Include="IntRandomizer.h" />
     <ClInclude Include="RNSCrypter.h" />
+    <ClInclude Include="RNSMatrix.h" />
+    <ClInclude Include="RNSMatrixLight.h" />
+    <ClInclude Include="RNSOverflowError.h" />
     <ClInclude Include="RNSRandomizer.h" />
     <ClInclude Include="RNSVector.h" />
+    <ClInclude Include="RNSVectorLight.h" />
     <ClInclude Include="TestFunctions.h" />
     <ClInclude Include="Tests.h" />
   </ItemGroup>

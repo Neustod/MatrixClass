@@ -38,6 +38,15 @@
     <Filter Include="Testing\Test functions">
       <UniqueIdentifier>{a78d2743-f99e-4ce2-93f6-c945cf6f7db3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\RNSOverflowError">
+      <UniqueIdentifier>{1df93eff-ba8c-4c13-83a8-2483280050d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\RNSVectorLight">
+      <UniqueIdentifier>{d3c22754-b1c4-407e-b0b5-e3aa021509d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\RNSMatrix">
+      <UniqueIdentifier>{d6c08f68-3772-4d27-9599-0ff7e46ea686}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RNSVector.cpp">
@@ -64,6 +73,9 @@
     <ClCompile Include="TestFunctions.cpp">
       <Filter>Testing\Test functions</Filter>
     </ClCompile>
+    <ClCompile Include="RNSVectorLight.cpp">
+      <Filter>Classes\RNSVectorLight</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RNSVector.h">
@@ -89,6 +101,18 @@
     </ClInclude>
     <ClInclude Include="TestFunctions.h">
       <Filter>Testing\Test functions</Filter>
+    </ClInclude>
+    <ClInclude Include="RNSOverflowError.h">
+      <Filter>Classes\RNSOverflowError</Filter>
+    </ClInclude>
+    <ClInclude Include="RNSVectorLight.h">
+      <Filter>Classes\RNSVectorLight</Filter>
+    </ClInclude>
+    <ClInclude Include="RNSMatrixLight.h">
+      <Filter>Classes\RNSMatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="RNSMatrix.h">
+      <Filter>Classes\RNSMatrix</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,20 +14,31 @@ private:
 	T _defaultValue;
 
 public:
-	// Default constructor.
-	Matrix(const T& defaultValue) : std::vector<std::vector<T>>(std::vector<std::vector<T>>(0)), _defaultValue(defaultValue) {}
-
-	Matrix(T&& defaultValue) : std::vector<std::vector<T>>(std::vector<std::vector<T>>(0)), _defaultValue(defaultValue) {}
-
 	// Constructor with initial size and default values.
-	Matrix(size_t size, const T& defaultValue) : std::vector<std::vector<T>>(std::vector<std::vector<T>>(size, std::vector<T>(size, defaultValue))), _defaultValue(defaultValue) {}
+	Matrix(const T& defaultValue, size_t size = 0) : std::vector<std::vector<T>>(std::vector<std::vector<T>>(size, std::vector<T>(size, defaultValue))), _defaultValue(defaultValue) {}
+
+	Matrix(T&& defaultValue, size_t size = 0) : std::vector<std::vector<T>>(std::vector<std::vector<T>>(size, std::vector<T>(size, defaultValue))), _defaultValue(defaultValue) {}
 
 	// Copying constructor.
 	Matrix(const Matrix<T>& src) : std::vector<std::vector<T>>(src), _defaultValue(src._defaultValue) {}
 
 	// Moving constructor.
-	Matrix(Matrix<T>&& src) noexcept : std::vector<std::vector<T>>(std::move(src)), _defaultValue(std::move(src._defaultValue)) {}
+	Matrix(Matrix<T>&& src) noexcept : std::vector<std::vector<T>>(src), _defaultValue(std::move(src._defaultValue)) {}
 
+public:
+	void operator=(const Matrix<T>& src)
+	{
+		_defaultValue = src._defaultValue;
+		std::vector<std::vector<T>>::operator=(src);
+	}
+
+	void operator=(Matrix<T>&& src) noexcept
+	{
+		_defaultValue = std::move(src._defaultValue);
+		std::vector<std::vector<T>>::operator=(src);
+	}
+
+public:
 	// Adding Matrixes.
 	// Result will be stored in the current Matrix object.
 	virtual void Add(const Matrix<T>& right) 
@@ -58,23 +69,24 @@ public:
 	// Result will be stored in the current Matrix object.
 	virtual void Mul(const Matrix<T>& right) 
 	{
-		std::vector<T> tmpRow(this->size(), _defaultValue);
+		size_t matrixSize = this->size();
+		Matrix<T> buffer(_defaultValue, matrixSize);
 
-		for (size_t row = 0; row < this->size(); row++)
+		for (size_t row = 0; row < matrixSize; row++)
 		{
-			for (size_t col = 0; col < this->size(); col++)
+			for (size_t col = 0; col < matrixSize; col++)
 			{
-				tmpRow[col] = _defaultValue;
-
-				for (size_t inner = 0; inner < this->size(); inner++)
+				for (size_t inner = 0; inner < matrixSize; inner++)
 				{
-					tmpRow[col] += (*this)[row][inner] * right[inner][col];
+					buffer[row][col] += (*this)[row][inner] * right[inner][col];
 				}
 			}
-			for (size_t col = 0; col < this->size(); col++) (*this)[row][col] = tmpRow[col];
 		}
+
+		this->operator=(std::move(buffer));
 	};
 
+public:
 	std::string ToString() const 
 	{
 		using namespace std;
@@ -101,7 +113,7 @@ public:
 		
 		fin >> size;
 		
-		Matrix<T>& buffer = *new Matrix<T>{size, _defaultValue};
+		Matrix<T>& buffer = *new Matrix<T>{_defaultValue, size};
 
 		for (size_t row = 0; row < this->size(); row++) 
 		{
@@ -126,18 +138,5 @@ public:
 				fout << (*this)[row][col];
 			}
 		}
-	}
-
-
-	void operator=(const Matrix<T>& src)
-	{
-		_defaultValue = src._defaultValue;
-		std::vector<std::vector<T>>::operator=(src);
-	}
-
-	void operator=(Matrix<T>&& src) noexcept
-	{
-		_defaultValue = std::move(src._defaultValue);
-		std::vector<std::vector<T>>::operator=(std::move(src));		
 	}
 };
